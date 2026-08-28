@@ -1,0 +1,1 @@
+npm i -D typescript jest ts-jest @types/jest @types/node
