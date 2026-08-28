@@ -3,8 +3,11 @@ import {
   getEnrollmentMessage,
 } from "../src/01_first_test.js";
 
+/**
+ * toBe used for numbers string 
+ */
 describe("getEnrollmentMessage", () => {
-  test("returns more than 1 seat when counter > 1", () => {
+  test("returns 'more than 1 seat left' when counter > 1", () => {
     const result = getEnrollmentMessage(12);
     expect(result).toBe("12 seats left");
   });
