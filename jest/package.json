@@ -1,13 +1,15 @@
-{"type": "module",
+{
+  "type": "module",
   "scripts": {
-    "test":"jest",
-    "test-coverage":"jest --coverage"
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+    "test-coverage": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage",
+    "test:watch": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --watch"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/node": "^26.4.0",
     "jest": "^30.4.2",
     "ts-jest": "^29.4.12",
-    "typescript": "^7.0.2"
+    "typescript": "^6.0.3"
   }
 }
