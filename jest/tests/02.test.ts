@@ -3,6 +3,10 @@ import {
   getCoursePriceLabel,
 } from "../src/02_matcher_edge_case.js";
 
+
+/*
+expect creates an xpressions and after it is the MATCHERS method
+*/
 describe("getCoursePriceLabel", () => {
   test("returns 'free' when the price is 0", () => {
     const result = getCoursePriceLabel(0);
