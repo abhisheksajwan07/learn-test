@@ -39,6 +39,7 @@ describe("buildPriceSummary", () => {
 
   test("don't call the helper when the function throws early for a -ve finalprice", () => {
     const formatCurrencySpy = jest.spyOn(priceUtils, "formatCurrency");
+    // for sync call use this patern
     expect(() => buildPriceSummary("React", 100, 101)).toThrow(
       " Final price cannot be negative",
     );
