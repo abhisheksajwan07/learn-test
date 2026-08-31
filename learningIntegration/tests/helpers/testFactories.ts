@@ -3,8 +3,9 @@ import { users, tasks } from "../../src/db/schema.js";
 import { hashPassword } from "../../src/utils/password.js";
 import { RegisterRequest } from "../../src/modules/auth/auth.types.js";
 
-// User factory
-export const createTestUser = async (overrides?: Partial<RegisterRequest>) => {
+export const createTestUser = async (
+  overrides?: Partial<RegisterRequest>,
+) => {
   const defaultUser = {
     email: `user_${Date.now()}@test.com`,
     name: "Test User",
@@ -12,6 +13,7 @@ export const createTestUser = async (overrides?: Partial<RegisterRequest>) => {
   };
 
   const userData = { ...defaultUser, ...overrides };
+
   const passwordHash = await hashPassword(userData.password);
 
   const [user] = await testDb
@@ -25,38 +27,31 @@ export const createTestUser = async (overrides?: Partial<RegisterRequest>) => {
 
   return {
     ...user,
-    password: userData.password, // Include password for login
+    password: userData.password,
   };
 };
 
-// Task factory
-export const createTestTask = async (overrides?: {
+export const createTestTask = async (userId: number, overrides?: {
   title?: string;
-  description?: string;
+  description?: string | null;
   completed?: boolean;
-  userId?: number;
 }) => {
   const defaultTask = {
     title: "Test Task",
     description: "This is a test task",
     completed: false,
-    userId: 1, // Default user ID
+    userId,
   };
 
-  const taskData = { ...defaultTask, ...overrides };
+  const taskData = {
+    ...defaultTask,
+    ...overrides,
+  };
 
-  const [task] = await testDb.insert(tasks).values(taskData).returning();
+  const [task] = await testDb
+    .insert(tasks)
+    .values(taskData)
+    .returning();
 
   return task;
-};
-
-// Login helper
-export const loginTestUser = async (email: string, password: string) => {
-  // This would normally call the login endpoint
-  // For factory purposes, we'll just return the user data
-  const user = await testDb.query.users.findFirst({
-    where: (users, { eq }) => eq(users.email, email),
-  });
-
-  return user;
 };

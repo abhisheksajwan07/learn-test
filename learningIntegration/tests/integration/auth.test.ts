@@ -54,7 +54,7 @@ describe("Auth Module - Integration Tests", () => {
       await request(app)
         .post("/api/auth/register")
         .send({ email: "invalid-email", name: "Test User", password: "password123" })
-        .expect(400);  // ← was 409, invalid format should be 400
+        .expect(422);  
     });
 
     it("should return 409 for duplicate email", async () => {
