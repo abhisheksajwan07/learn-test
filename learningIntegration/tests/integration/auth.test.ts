@@ -1,8 +1,11 @@
 import request from "supertest";
+import jwt from "jsonwebtoken";
 import app from "../../src/app.js";
 import { testDb } from "../../src/config/database.js";
 import { users } from "../../src/db/schema.js";
-import { hashPassword } from "../../src/utils/password.js";
+import { comparePassword, hashPassword } from "../../src/utils/password.js";
+import { describe, expect, it } from "vitest";
+import config from "../../src/config/env.js";
 
 describe("Auth Module - Integration Tests", () => {
   describe("POST /api/auth/register", () => {
@@ -22,7 +25,9 @@ describe("Auth Module - Integration Tests", () => {
 
       // Assert - HTTP response
       expect(response.body).toHaveProperty("token");
+      expect(response.body).toHaveProperty("user");
       expect(response.body.user).toHaveProperty("id");
+      expect(response.body.user).toHaveProperty("email");
       expect(response.body.user.email).toBe(userData.email);
       expect(response.body.user.name).toBe(userData.name);
 
@@ -32,13 +37,30 @@ describe("Auth Module - Integration Tests", () => {
       });
 
       expect(userInDb).toBeDefined();
+      if (!userInDb) {
+        throw new Error("User was not created");
+      }
       expect(userInDb?.email).toBe(userData.email);
       expect(userInDb?.name).toBe(userData.name);
 
       // Verify password is hashed
-      const isPasswordValid = await hashPassword("password123");
+      const isPasswordValid = await comparePassword(
+        userData.password,
+        userInDb!.passwordHash,
+      );
+
+      expect(isPasswordValid).toBe(true);
+
       expect(userInDb?.passwordHash).not.toBe("password123");
       expect(userInDb?.passwordHash).toBeTruthy();
+
+      // check jwt correctly signed in
+      const decoded = jwt.verify(response.body.token, config.jwtSecret) as {
+        id: number;
+        email: string;
+      };
+
+      expect(decoded.id).toBe(userInDb.id);
     });
 
     it("should return 400 for invalid email format", async () => {
@@ -159,13 +181,17 @@ describe("Auth Module - Integration Tests", () => {
         password: userData.password,
       });
 
-      const token = loginResponse.body.token;
 
+      const token = loginResponse.body.token;
+    
+      
       // Act
       const response = await request(app)
         .get("/api/auth/me")
         .set("Cookie", [`auth_token=${token}`])
         .expect(200);
+
+      
 
       // Assert
       expect(response.body.user).toHaveProperty("id");

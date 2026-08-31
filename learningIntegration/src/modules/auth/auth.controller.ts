@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
-import { authService } from './auth.service.js';
-import { RegisterRequest, LoginRequest } from './auth.types.js';
-import config from '../../config/env.js';
-import { validateRequest } from '../../utils/validation.js';
-import { AuthenticatedRequest } from '../../middleware/auth.js';
+import { Request, Response } from "express";
+import { authService } from "./auth.service.js";
+import { RegisterRequest, LoginRequest } from "./auth.types.js";
+import config from "../../config/env.js";
+import { validateRequest } from "../../utils/validation.js";
+import { AuthenticatedRequest } from "../../middleware/auth.js";
 
 class AuthController {
   async register(req: Request, res: Response) {
@@ -18,7 +18,7 @@ class AuthController {
     res.cookie(config.cookieName, result.token, {
       httpOnly: config.cookieHttpOnly,
       secure: config.cookieSecure,
-      sameSite: config.cookieSameSite as 'strict' | 'lax' | 'none' | undefined,
+      sameSite: config.cookieSameSite as "strict" | "lax" | "none" | undefined,
       maxAge: 1000 * 60 * 60, // 1 hour
     });
 
@@ -40,7 +40,7 @@ class AuthController {
     res.cookie(config.cookieName, result.token, {
       httpOnly: config.cookieHttpOnly,
       secure: config.cookieSecure,
-      sameSite: config.cookieSameSite as 'strict' | 'lax' | 'none' | undefined,
+      sameSite: config.cookieSameSite as "strict" | "lax" | "none" | undefined,
       maxAge: 1000 * 60 * 60, // 1 hour
     });
 
@@ -54,8 +54,8 @@ class AuthController {
     if (!req.user) {
       return res.status(401).json({
         error: {
-          code: 'UNAUTHENTICATED',
-          message: 'Authentication required',
+          code: "UNAUTHENTICATED",
+          message: "Authentication required",
         },
       });
     }
@@ -67,8 +67,10 @@ class AuthController {
 
   async logout(req: Request, res: Response) {
     res.clearCookie(config.cookieName);
-    return res.status(200).json({ message: 'Logged out successfully' });
+    return res.status(200).json({ message: "Logged out successfully" });
   }
 }
 
 export const authController = new AuthController();
+
+
