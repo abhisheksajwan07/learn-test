@@ -2,7 +2,7 @@ import { tasksRepository } from './tasks.repository.js';
 import { CreateTaskRequest, UpdateTaskRequest, Task } from './tasks.types.js';
 import { AuthenticatedRequest } from '../../middleware/auth.js';
 
-class TasksService {
+export class TasksService {
   async createTask(taskData: CreateTaskRequest, userId: number): Promise<Task> {
     const task = await tasksRepository.createTask({
       title: taskData.title,

@@ -4,7 +4,7 @@ import { eq, and } from 'drizzle-orm';
 import { NotFoundError, ForbiddenError } from '../../errors/HttpError.js';
 import { AuthenticatedRequest } from '../../middleware/auth.js';
 
-class TasksRepository {
+export class TasksRepository {
   async createTask(taskData: {
     title: string;
     description: string | null;
